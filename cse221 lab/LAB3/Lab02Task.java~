@@ -1,0 +1,48 @@
+import java.util.*;
+import java.io.*;
+public class Lab02Task
+{
+    public static void main(String [] args)throws IOException
+    {
+        try
+        {
+            Scanner sc=new Scanner(new File("C:\\Users\\shoha\\IdeaProjects\\Lab3\\srcTest.txt"));
+            int n=sc.nextInt();
+            int e=sc.nextInt();
+            int [][]arr=new int[n][n];
+            int p,q;
+            for(int i=0;i<e;i++)
+            {
+                p=sc.nextInt();
+                q=sc.nextInt();
+                arr[p][q]=1;
+            }
+            int s=sc.nextInt();
+            BFS(arr,s,n);
+        }
+        catch(IOException ex)
+        {
+            System.out.println(ex);
+        }
+    }
+    public static void BFS(int [][]arr,int s,int n)
+    {
+        int vis[]=new int[n];
+        ArrayList<Integer> que=new ArrayList<Integer>();
+        que.add(s);
+        vis[s]=1;
+        while(que.size()!=0)
+        {
+            int x=que.remove(0);
+            System.out.println(x+" ");
+            for(int i=0;i<n;i++)
+            {
+                if(arr[x][i]==1 && vis[i]!=1)
+                {
+                    que.add(i);
+                    vis[i]=1;
+                }
+            }
+        }
+    }
+}

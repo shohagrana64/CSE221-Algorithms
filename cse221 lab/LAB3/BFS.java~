@@ -1,0 +1,108 @@
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class BFS {
+     private Color[] colors;
+     private Integer[] predecessors;
+     private Integer[] distances;
+     
+     private Graph graph;
+     
+     boolean debug = false;
+     
+     public enum Color {
+          WHITE, GRAY, BLACK;
+     }
+     
+     public BFS(Graph g_) {
+          graph = g_;
+          colors = new Color[g_.V()];
+          predecessors = new Integer[g_.V()];
+          distances = new Integer[g_.V()];
+     }
+     
+     public Graph bfs(int source) {
+          if (source < 0 || source >= graph.V()) {
+               throw new IndexOutOfBoundsException();
+          }
+          
+          Graph g = new Graph(graph.V());
+          
+          for (int u = 0; u < graph.V(); u++) {
+               if (u != source) {
+                    colors[u] = Color.WHITE;
+                    distances[u] = Integer.MAX_VALUE;
+                    predecessors[u] = null;
+               }
+          }
+          
+          colors[source] = Color.GRAY;
+          distances[source] = 0;
+          predecessors[source] = null;
+          
+          Queue<Integer> q = new LinkedList<Integer>();
+          q.add(source);
+          
+          while (!q.isEmpty()) {
+               Integer u = q.poll();
+               
+               for (Integer v : graph.adj(u)) {
+                    if (colors[v] == Color.WHITE) {
+                         colors[v] = Color.GRAY;
+                         //distances[v] = distances[u] + 1;
+                         //predecessors[v] = u;
+                         q.add(v);
+                         
+                         g.addUndirectedEdge(u, v);
+                    }
+               }
+               
+               colors[u] = Color.BLACK;
+               if (debug) {
+                    System.out.println(this);
+               }
+          }
+          
+          return g;
+          
+     }
+     
+     public String toString() {
+          StringBuilder sb = new StringBuilder();
+          sb.append(Arrays.toString(colors));
+          sb.append("\n");
+          
+          sb.append(Arrays.toString(distances));
+          sb.append("\n");
+          
+          sb.append(Arrays.toString(predecessors));
+          sb.append("\n");
+          
+          return new String(sb);
+     }
+     
+     public static void main(String[] args) {
+          int V = 8;
+          Graph g = new Graph(V);
+          g.addUndirectedEdge(0, 1);
+          g.addUndirectedEdge(1, 2);
+          g.addUndirectedEdge(2, 3);
+          g.addUndirectedEdge(3, 4);
+          g.addUndirectedEdge(3, 5);
+          g.addUndirectedEdge(4, 5);
+          g.addUndirectedEdge(5, 6);
+          g.addUndirectedEdge(4, 7);
+          g.addUndirectedEdge(6, 7);
+          System.out.println(g);
+          
+          BFS bfs = new BFS(g);
+          
+          Graph bfsGraph = bfs.bfs(0);
+          
+          System.out.println(bfs);
+          System.out.println(bfsGraph);
+          
+     }
+     
+}
